@@ -14,7 +14,6 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerTeleportEvent
-import org.bukkit.event.world.ChunkUnloadEvent
 import org.bukkit.event.world.EntitiesUnloadEvent
 import java.util.*
 import kotlin.math.PI
@@ -41,6 +40,10 @@ class PetDisplay(
 
     private fun tickPlayer(player: Player) {
         val entity = getOrNew(player) ?: return
+        if (player.shouldHidePet) {
+            remove(player)
+            return
+        }
         val pet = player.activePet
 
         if (pet != null) {
