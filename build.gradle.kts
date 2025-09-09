@@ -40,14 +40,14 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("com.willfp:eco:6.55.0")
+        compileOnly("com.willfp:eco:6.56.0")
         compileOnly("org.jetbrains:annotations:23.0.0")
         compileOnly("org.jetbrains.kotlin:kotlin-stdlib:2.1.0")
     }
 
     java {
         withSourcesJar()
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     tasks {
@@ -59,7 +59,7 @@ allprojects {
 
         compileKotlin {
             compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_17)
+                jvmTarget.set(JvmTarget.JVM_21)
             }
         }
 

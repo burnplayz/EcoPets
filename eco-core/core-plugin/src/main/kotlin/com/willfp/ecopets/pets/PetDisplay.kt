@@ -38,6 +38,14 @@ class PetDisplay(
         tick++
     }
 
+    private val smoothYOffsetMap = mutableMapOf<UUID, Double>()
+    private val lastUpdateMap = mutableMapOf<UUID, Long>()
+    private val expireAfterMillis = 5_000L
+    companion object {
+        private const val DEFAULT_EYE_HEIGHT = 1.62
+        private const val MAX_Y_OFFSET = 0.5
+    }
+
     private fun tickPlayer(player: Player) {
         val entity = getOrNew(player) ?: return
         if (player.shouldHidePet) {
@@ -59,9 +67,17 @@ class PetDisplay(
                 .replace("%level%", player.getPetLevel(pet).toString())
                 .formatEco(player)
 
+            val location = getLocation(player)
+            val offset = plugin.configYml.getDoubleOrNull("pet-entity.location-y-offset") ?: 0.0
+            val bobbing = plugin.configYml.getDoubleOrNull("pet-entity.bobbing-intensity") ?: 0.15
             val location = getLocation(player, if ((entity is ArmorStand)) 0.0 else 1.0)
 
-            location.y += NumberUtils.fastSin(tick / (2 * PI) * 0.5) * 0.15
+
+            if (plugin.configYml.getBool("pet-entity.bobbing")) {
+                location.y += offset + NumberUtils.fastSin(tick / (2 * PI) * 0.5) * bobbing
+            } else {
+                location.y += offset
+            }
 
             if (location.world != null) {
                 entity.teleport(location)
